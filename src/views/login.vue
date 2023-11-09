@@ -130,7 +130,7 @@
           </div>
         </el-form-item>
         <div>
-          <el-button size="large" type="text" @click="unbind()"
+          <el-button size="large" type="text" @click="bind()"
             >绑定钉钉</el-button
           >
         </div>
@@ -200,22 +200,13 @@ export default {
     // });
   },
   methods: {
-    unbind(){
+    bind(){
       let url="http://5ncxfk.natappfree.cc/system/dinging/auth";
         dinGing(url).then((res)=>{
           if(res.code==0){
             window.location.href=res.data
           }
         })
-    },
-    bind() {
-      // 计算 redirectUri
-      const redirectUri =  'http://vxw7qt.natappfree.cc'+ '/user/profile';
-      // 进行跳转
-      socialAuthRedirect( encodeURIComponent(redirectUri)).then((res) => {
-        // console.log(res.url);
-        window.location.href = res.data;
-      });
     },
     getSmsCode() {
       if (this.mobileCodeTimer > 0) return;
