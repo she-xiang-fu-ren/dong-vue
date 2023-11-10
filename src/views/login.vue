@@ -1,4 +1,5 @@
 <template>
+<div class="content">
   <div class="login">
     <el-form
       ref="loginForm"
@@ -136,21 +137,29 @@
         </div>
       </div>
     </el-form>
-    <!--  底部  -->
+  </div>
+   <!-- 图形验证码 -->
+    <Verify ref="verify" :captcha-type="'blockPuzzle'" :img-size="{width:'400px',height:'200px'}"
+            @success="handleLogin" />
+            <!--  底部  -->
     <div class="el-login-footer">
       <span>Copyright © 2018-2023 ruoyi.vip All Rights Reserved.</span>
     </div>
-  </div>
+</div>
 </template>
 
 <script>
 import { getCodeImg,sendSmsCode,dinGing} from "@/api/login";
 import Cookies from "js-cookie";
 import { encrypt, decrypt } from "@/utils/jsencrypt";
+import Verify from '@/components/Verifition/Verify';
 import {socialBind, socialUnbind} from "@/api/system/socialUser";
 
 export default {
   name: "Login",
+  components: {
+    Verify
+  },
   data() {
     return {
       mobileCodeTimer: 0,
@@ -189,7 +198,7 @@ export default {
     },
   },
   created() {
-    this.getCode();
+
     this.getCookie();
     // socialBind("", code, state).then(resp => {
     //   this.$modal.msgSuccess("绑定成功");
@@ -198,6 +207,9 @@ export default {
     //   this.getUser();
     //   this.setActiveTab('userSocial');
     // });
+  },
+  mounted(){
+        this.getCode();
   },
   methods: {
     bind(){
@@ -230,6 +242,7 @@ export default {
       });
     },
     getCode() {
+
       getCodeImg().then((res) => {
         this.captchaEnabled =
           res.captchaEnabled === undefined ? true : res.captchaEnabled;
@@ -251,6 +264,7 @@ export default {
       };
     },
     handleLogin() {
+              
       this.$refs.loginForm.validate((valid) => {
         if (valid) {
           this.loading = true;
@@ -276,6 +290,7 @@ export default {
               this.loading = false;
               if (this.captchaEnabled) {
                 this.getCode();
+                this.$refs.verify.show()
               }
             });
         }
